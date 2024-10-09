@@ -1,0 +1,272 @@
+%YAML 1.1
+---
+
+# The detection engine builds internal groups of signatures. The engine
+# allows us to specify the profile to use for them, to manage memory in an
+# efficient way keeping good performance. For the profile keyword you
+# can use the words "low", "medium", "high" or "custom". If you use custom,
+# make sure to define the values in the "custom-values" section.
+# Usually you would prefer medium/high/low.
+#
+# "sgh mpm-context", indicates how the staging should allot mpm contexts for
+# the signature groups.  "single" indicates the use of a single context for
+# all the signature group heads.  "full" indicates a mpm-context for each
+# group head.  "auto" lets the engine decide the distribution of contexts
+# based on the information the engine gathers on the patterns from each
+# group head.
+#
+# The option inspection-recursion-limit is used to limit the recursive calls
+# in the content inspection code.  For certain payload-sig combinations, we
+# might end up taking too much time in the content inspection code.
+# If the argument specified is 0, the engine uses an internally defined
+# default limit.  When a value is not specified, there are no limits on the recursion.
+detect:
+  profile: high
+  custom-values:
+    toclient-groups: 100
+    toserver-groups: 100
+  sgh-mpm-context: auto
+  inspection-recursion-limit: 3000
+  # If set to yes, the loading of signatures will be made after the capture
+  # is started. This will limit the downtime in IPS mode.
+  #delayed-detect: yes
+  prefilter:
+    # default prefiltering setting. "mpm" only creates MPM/fast_pattern
+    # engines. "auto" also sets up prefilter engines for other keywords.
+    # Use --list-keywords=all to see which keywords support prefiltering.
+    default: mpm
+
+  # the grouping values above control how many groups are created per
+  # direction. Port whitelisting forces that port to get its own group.
+  # Very common ports will benefit, as well as ports with many expensive
+  # rules.
+  grouping:
+    #tcp-whitelist: 53, 80, 139, 443, 445, 1433, 3306, 3389, 6666, 6667, 8080
+    #udp-whitelist: 53, 135, 5060
+
+  profiling:
+    # Log the rules that made it past the prefilter stage, per packet
+    # default is off. The threshold setting determines how many rules
+    # must have made it past pre-filter for that rule to trigger the
+    # logging.
+    #inspect-logging-threshold: 200
+    grouping:
+      dump-to-disk: false
+      include-rules: false      # very verbose
+      include-mpm-stats: false
+
+# Select the multi pattern algorithm you want to run for scan/search the
+# in the engine.
+#
+# The supported algorithms are:
+# "ac"      - Aho-Corasick, default implementation
+# "ac-bs"   - Aho-Corasick, reduced memory implementation
+# "ac-ks"   - Aho-Corasick, "Ken Steele" variant
+# "hs"      - Hyperscan, available when built with Hyperscan support
+#
+# The default mpm-algo value of "auto" will use "hs" if Hyperscan is
+# available, "ac" otherwise.
+#
+# The mpm you choose also decides the distribution of mpm contexts for
+# signature groups, specified by the conf - "detect.sgh-mpm-context".
+# Selecting "ac" as the mpm would require "detect.sgh-mpm-context"
+# to be set to "single", because of ac's memory requirements, unless the
+# ruleset is small enough to fit in memory, in which case one can
+# use "full" with "ac".  The rest of the mpms can be run in "full" mode.
+
+        #mpm-algo: auto
+        #mpm-algo: ac-ks
+mpm-algo: hs
+
+# Select the matching algorithm you want to use for single-pattern searches.
+#
+# Supported algorithms are "bm" (Boyer-Moore) and "hs" (Hyperscan, only
+# available if Suricata has been built with Hyperscan support).
+#
+# The default of "auto" will use "hs" if available, otherwise "bm".
+
+spm-algo: auto
+
+# Suricata is multi-threaded. Here the threading can be influenced.
+#threading:
+# set-cpu-affinity: no
+  # Tune cpu affinity of threads. Each family of threads can be bound
+  # to specific CPUs.
+  #
+  # These 2 apply to the all runmodes:
+  # management-cpu-set is used for flow timeout handling, counters
+  # worker-cpu-set is used for 'worker' threads
+  #
+  # Additionally, for autofp these apply:
+  # receive-cpu-set is used for capture threads
+  # verdict-cpu-set is used for IPS verdict threads
+  #
+  # cpu-affinity:
+  # - management-cpu-set:
+  #     cpu: [ 0 ]  # include only these CPUs in affinity settings
+  # - receive-cpu-set:
+  #     cpu: [ 0 ]  # include only these CPUs in affinity settings
+  # - worker-cpu-set:
+  #     cpu: [ "0-1" ]
+  #     mode: "exclusive"
+        # Use explicitly 3 threads and don't compute number by using
+        # detect-thread-ratio variable:
+        # threads: 3
+        #  prio:
+        # low: [ 0 ]
+        #  medium: [ "1-2" ]
+        #  high: [ 3 ]
+        #  default: "medium"
+    #- verdict-cpu-set:
+    #    cpu: [ 0 ]
+    #    prio:
+    #      default: "high"
+  #
+  # By default Suricata creates one "detect" thread per available CPU/CPU core.
+  # This setting allows controlling this behaviour. A ratio setting of 2 will
+                                                                                     
+    # create 2 detect threads for each CPU/CPU core. So for a dual core CPU this
+  # will result in 4 detect threads. If values below 1 are used, less threads
+  # are created. So on a dual core CPU a setting of 0.5 results in 1 detect
+  # thread being created. Regardless of the setting at a minimum 1 detect
+  # thread will always be created.
+  #
+  #detect-thread-ratio: 0.5
+  #
+  # By default, the per-thread stack size is left to its default setting. If
+  # the default thread stack size is too small, use the following configuration
+  # setting to change the size. Note that if any thread's stack size cannot be
+  # set to this value, a fatal error occurs.
+  #
+  # Generally, the per-thread stack-size should not exceed 8MB.
+  #stack-size: 8mb
+
+# Luajit has a strange memory requirement, its 'states' need to be in the
+# first 2G of the process' memory.
+#
+# 'luajit.states' is used to control how many states are preallocated.
+# State use: per detect script: 1 per detect thread. Per output script: 1 per
+# script.
+luajit:
+  states: 128
+
+# Profiling settings. Only effective if Suricata has been built with
+# the --enable-profiling configure flag.
+#
+profiling:
+  # Run profiling for every X-th packet. The default is 1, which means we
+  # profile every packet. If set to 1000, one packet is profiled for every
+  # 1000 received.
+  #sample-rate: 1000
+
+  # rule profiling
+  rules:
+
+    # Profiling can be disabled here, but it will still have a
+    # performance impact if compiled in.
+    enabled: yes
+    filename: rule_perf.log
+    append: yes
+
+    # Sort options: ticks, avgticks, checks, matches, maxticks
+    # If commented out all the sort options will be used.
+    #sort: avgticks
+
+    # Limit the number of sids for which stats are shown at exit (per sort).
+    limit: 10
+
+    # output to json
+    json: yes
+
+  # per keyword profiling
+  keywords:
+    enabled: yes
+    filename: keyword_perf.log
+    append: yes
+
+  prefilter:
+    enabled: yes
+    filename: prefilter_perf.log
+    append: yes
+  # per rulegroup profiling
+  rulegroups:
+    enabled: yes
+    filename: rule_group_perf.log
+    append: yes
+
+  # packet profiling
+  packets:
+
+    # Profiling can be disabled here, but it will still have a
+    # performance impact if compiled in.
+    enabled: yes
+    filename: packet_stats.log
+    append: yes
+
+    # per packet csv output
+    csv:
+
+      # Output can be disabled here, but it will still have a
+      # performance impact if compiled in.
+      enabled: no
+      filename: packet_stats.csv
+
+  # profiling of locking. Only available when Suricata was built with
+  # --enable-profiling-locks.
+  locks:
+    enabled: no
+    filename: lock_stats.log
+    append: yes
+
+  pcap-log:
+    enabled: no
+    filename: pcaplog_stats.log
+    append: yes
+
+##
+## Netfilter integration
+##
+
+# When running in NFQ inline mode, it is possible to use a simulated
+# non-terminal NFQUEUE verdict.
+# This permits sending all needed packet to Suricata via this rule:
+#        iptables -I FORWARD -m mark ! --mark $MARK/$MASK -j NFQUEUE
+# And below, you can have your standard filtering ruleset. To activate
+# this mode, you need to set mode to 'repeat'
+# If you want a packet to be sent to another queue after an ACCEPT decision
+# set the mode to 'route' and set next-queue value.
+# On Linux >= 3.1, you can set batchcount to a value > 1 to improve performance
+# by processing several packets before sending a verdict (worker runmode only).
+# On Linux >= 3.6, you can set the fail-open option to yes to have the kernel
+# accept the packet if Suricata is not able to keep pace.
+# bypass mark and mask can be used to implement NFQ bypass. If bypass mark is
+# set then the NFQ bypass is activated. Suricata will set the bypass mark/mask
+# on packet of a flow that need to be bypassed. The Nefilter ruleset has to
+# directly accept all packets of a flow once a packet has been marked.
+nfq:
+#  mode: accept
+#  repeat-mark: 1
+#  repeat-mask: 1
+#  bypass-mark: 1
+#  bypass-mask: 1
+#  route-queue: 2
+#  batchcount: 20
+#  fail-open: yes
+
+#nflog support
+nflog:
+    # netlink multicast group
+    # (the same as the iptables --nflog-group param)
+    # Group 0 is used by the kernel, so you can't use it
+  - group: 2
+    # netlink buffer size
+    buffer-size: 18432
+    # put default value here
+  - group: default
+    # set number of packets to queue inside kernel
+    qthreshold: 1
+    # set the delay before flushing packet in the kernel's queue
+    qtimeout: 100
+    # netlink max buffer size
+    max-size: 20000
+

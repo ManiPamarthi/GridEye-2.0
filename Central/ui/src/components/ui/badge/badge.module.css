@@ -1,0 +1,19 @@
+.badge {
+   color: var(--color-gray);
+   padding:5px;
+   &.danger {
+    color: var(--color-red);
+  } 
+  &.warning {
+    color: var(--color-warning);
+  }
+  &.success {
+    color: var(--color-success);
+  }
+  &.base {
+    background: var(--color-gray);
+  }
+  &.custom {
+    color: var(--color-violet);
+  }
+}

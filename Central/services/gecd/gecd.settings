@@ -1,0 +1,11 @@
+{
+	"ListenPort":9000,
+	"AssetRebuldInterval":"1 day",
+	"TopologyRebuildInterval":"1 day",
+	"DeepInspectionInterval":"4 hours",
+	"LogFile":"/tmp/gecentral/logs/gecd.log",
+	"ElasticDBURI":"https://elastic:utiltyx123@localhost:9200",
+	"Certificate":"./http_ca.crt",
+	"TopologyIndexName":"ge_topo_index",
+	"AssetTableIndex":"ge_assets_index"
+}

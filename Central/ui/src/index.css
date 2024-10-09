@@ -1,0 +1,57 @@
+
+:root {
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  -webkit-text-size-adjust: 100%;
+  
+  --color-primary: rgba(108,93,211,1);
+  --color-secondary:rgba(151,151,151,1);
+
+  --color-orange: rgba(244, 122, 53,1);
+  --color-french-sky-blue: rgba(112, 171, 255,1);
+  --color-lavendar-magenta: rgba(236, 140, 252,1);
+  --color-maximum-blue-green: rbga(59, 189, 196,1);
+  --color-english-vermillion: rgba(208, 71, 73,1);
+  --color-red:rgba(255, 0, 0,1);
+  --color-warning:rgba(244, 156, 53, 1);
+  --color-gray: rgba(206, 210, 217, 0.9);
+  --color-success: rgba(59, 189, 196, 1);
+  --color-table-border: rgba(75, 81, 87, 0.3);
+  --color-shadow: rgba(227, 230, 236, 0.9);
+  --color-bg-color:rgba(239, 239, 239, 1);
+  --color-light-dark:rgba(234, 230, 243, 1);
+  --color-violet:rgba(108, 93, 211, 1);
+  --color-dark-base:rgba(234, 230, 243, 0.5);
+  --color-font-color:rgba(101, 107, 112, 1);
+  
+
+  --color-monochrome-base: #fff;
+  --color-monochrome-contrast: #000;
+  --color-bg-base-1: rgba(234,235,241,1);
+  --color-bg-base: rgba(255, 255, 255, 1);
+  --color-text-high: rgba(0, 0, 0, 1);
+  --color-text-low: rgba(0, 0, 0, 0.4);
+  --color-text-medium: rgba(128, 129, 145, 1);
+  --color-border: rgba(228, 228, 228, 1);
+}
+html, body, #root {
+  margin:0;
+  height: 100%;
+}
+  .dark-mode {
+  --color-monochrome-base: #000;
+  --color-monochrome-contrast: #fff;
+  --color-bg-base: rgba(30, 30, 30, 1);
+  --color-bg-base-1: rgba(36, 39, 49, 1);
+  --color-text-high: rgba(255, 255, 255, 1);
+  --color-text-low: rgba(255, 255, 255, 0.4);
+  --color-border: rgba(228, 228, 228, 0.1);
+  }
+

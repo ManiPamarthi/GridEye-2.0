@@ -1,0 +1,25 @@
+{
+	"LogPath": "/opt/grideye_edge/logs/probe.log",
+	"Probes":[
+		{
+			"Name":"DNP3",
+			"Topic":"/topic/dnp3",
+			"Class":"DNP3Probe",
+	                 "ListenAddress":"127.0.0.1",
+	                 "ListenPort":55000,
+			 "Status":"Enabled",
+			"RulesFile":""
+		},
+
+		{
+			"Name":"MODBUS",
+			"Topic":"/topic/modbus",
+			"Class":"MODBUSProbe",
+	                 "ListenAddress":"127.0.0.1",
+	                 "ListenPort":55001,
+			 "Status":"Disabled",
+			"RulesFile":""
+		}
+
+	]
+}

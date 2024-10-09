@@ -1,0 +1,230 @@
+%YAML 1.1
+---
+
+# General settings affecting packet capture
+capture:
+  # disable NIC offloading. It's restored when Suricata exits.
+  # Enabled by default.
+  #disable-offloading: false
+  #
+  # disable checksum validation. Same as setting '-k none' on the
+  # commandline.
+  #checksum-validation: none
+
+# Netmap support
+#
+# Netmap operates with NIC directly in driver, so you need FreeBSD 11+ which has
+# built-in Netmap support or compile and install the Netmap module and appropriate
+# NIC driver for your Linux system.
+# To reach maximum throughput disable all receive-, segmentation-,
+# checksum- offloading on your NIC (using ethtool or similar).
+# Disabling TX checksum offloading is *required* for connecting OS endpoint
+# with NIC endpoint.
+# You can find more information at https://github.com/luigirizzo/netmap
+#
+netmap:
+   # To specify OS endpoint add plus sign at the end (e.g. "eth0+")
+ - interface: eth2
+   # Number of capture threads. "auto" uses number of RSS queues on interface.
+   # Warning: unless the RSS hashing is symmetrical, this will lead to
+   # accuracy issues.
+   #threads: auto
+   # You can use the following variables to activate netmap tap or IPS mode.
+   # If copy-mode is set to ips or tap, the traffic coming to the current
+   # interface will be copied to the copy-iface interface. If 'tap' is set, the
+   # copy is complete. If 'ips' is set, the packet matching a 'drop' action
+                                                                                    # will not be copied.
+   # To specify the OS as the copy-iface (so the OS can route packets, or forward
+   # to a service running on the same machine) add a plus sign at the end
+   # (e.g. "copy-iface: eth0+"). Don't forget to set up a symmetrical eth0+ -> eth0
+   # for return packets. Hardware checksumming must be *off* on the interface if
+   # using an OS endpoint (e.g. 'ifconfig eth0 -rxcsum -txcsum -rxcsum6 -txcsum6' for FreeBSD
+   # or 'ethtool -K eth0 tx off rx off' for Linux).
+   #copy-mode: tap
+   #copy-iface: eth3
+   # Set to yes to disable promiscuous mode
+   # disable-promisc: no
+   # Choose checksum verification mode for the interface. At the moment
+   # of the capture, some packets may have an invalid checksum due to
+   # the checksum computation being offloaded to the network card.
+   # Possible values are:
+   #  - yes: checksum validation is forced
+   #  - no: checksum validation is disabled
+   #  - auto: Suricata uses a statistical approach to detect when
+   #  checksum off-loading is used.
+   # Warning: 'checksum-validation' must be set to yes to have any validation
+   #checksum-checks: auto
+   # BPF filter to apply to this interface. The pcap filter syntax apply here.
+   #bpf-filter: port 80 or udp
+ #- interface: eth3
+   #threads: auto
+   #copy-mode: tap
+   #copy-iface: eth2
+   # Put default values here
+ - interface: default
+
+# PF_RING configuration: for use with native PF_RING support
+# for more info see http://www.ntop.org/products/pf_ring/
+pfring:
+  - interface: eth0
+    # Number of receive threads. If set to 'auto' Suricata will first try
+    # to use CPU (core) count and otherwise RSS queue count.
+    threads: auto
+
+    # Default clusterid.  PF_RING will load balance packets based on flow.
+    # All threads/processes that will participate need to have the same
+    # clusterid.
+    cluster-id: 990
+
+    # Default PF_RING cluster type. PF_RING can load balance per flow.
+    # Possible values are cluster_flow or cluster_round_robin.
+    cluster-type: cluster_flow
+
+    # bpf filter for this interface
+    #bpf-filter: tcp
+
+    # If bypass is set then the PF_RING hw bypass is activated, when supported
+    # by the network interface. Suricata will instruct the interface to bypass
+    # all future packets for a flow that need to be bypassed.
+    #bypass: yes
+
+    # Choose checksum verification mode for the interface. At the moment
+    # of the capture, some packets may have an invalid checksum due to
+    # the checksum computation being offloaded to the network card.
+    # Possible values are:
+    #  - rxonly: only compute checksum for packets received by network card.
+    #  - yes: checksum validation is forced
+    #  - no: checksum validation is disabled
+    #  - auto: Suricata uses a statistical approach to detect when
+    #  checksum off-loading is used. (default)
+    # Warning: 'checksum-validation' must be set to yes to have any validation
+    #checksum-checks: auto
+  # Second interface
+  #- interface: eth1
+  #  threads: 3
+  #  cluster-id: 93
+  #  cluster-type: cluster_flow
+  # Put default values here
+  - interface: default
+    #threads: 2
+
+# For FreeBSD ipfw(8) divert(4) support.
+# Please make sure you have ipfw_load="YES" and ipdivert_load="YES"
+# in /etc/loader.conf or kldload'ing the appropriate kernel modules.
+# Additionally, you need to have an ipfw rule for the engine to see
+# the packets from ipfw.  For Example:
+#
+#   ipfw add 100 divert 8000 ip from any to any
+#
+# N.B. This example uses "8000" -- this number must mach the values
+# you passed on the command line, i.e., -d 8000
+#
+ipfw:
+
+  # Reinject packets at the specified ipfw rule number.  This config
+  # option is the ipfw rule number AT WHICH rule processing continues
+  # in the ipfw processing system after the engine has finished
+  # inspecting the packet for acceptance.  If no rule number is specified,
+  # accepted packets are reinjected at the divert rule which they entered
+  # and IPFW rule processing continues.  No check is done to verify
+  # this will rule makes sense so care must be taken to avoid loops in ipfw.
+  #
+  ## The following example tells the engine to reinject packets
+  # back into the ipfw firewall AT rule number 5500:
+  #
+  # ipfw-reinjection-rule-number: 5500
+
+
+napatech:
+    # When use_all_streams is set to "yes" the initialization code will query
+    # the Napatech service for all configured streams and listen on all of them.
+    # When set to "no" the streams config array will be used.
+    #
+    # This option necessitates running the appropriate NTPL commands to create
+    # the desired streams prior to running Suricata.
+    #use-all-streams: no
+
+    # The streams to listen on when auto-config is disabled or when and threading
+    # cpu-affinity is disabled.  This can be either:
+    #   an individual stream (e.g. streams: [0])
+    # or
+    #   a range of streams (e.g. streams: ["0-3"])
+    #
+    streams: ["0-3"]
+
+    # Stream stats can be enabled to provide fine grain packet and byte counters
+    # for each thread/stream that is configured.
+    #
+    enable-stream-stats: no
+
+    # When auto-config is enabled the streams will be created and assigned
+    # automatically to the NUMA node where the thread resides.  If cpu-affinity
+    # is enabled in the threading section.  Then the streams will be created
+    # according to the number of worker threads specified in the worker-cpu-set.
+    # Otherwise, the streams array is used to define the streams.
+    #
+    # This option is intended primarily to support legacy configurations.
+    #
+    # This option cannot be used simultaneously with either "use-all-streams"
+    # or "hardware-bypass".
+    #
+    auto-config: yes
+
+    # Enable hardware level flow bypass.
+    #
+    hardware-bypass: yes
+
+    # Enable inline operation.  When enabled traffic arriving on a given port is
+    # automatically forwarded out its peer port after analysis by Suricata.
+    #
+    inline: no
+
+    # Ports indicates which Napatech ports are to be used in auto-config mode.
+    # these are the port IDs of the ports that will be merged prior to the
+    # traffic being distributed to the streams.
+    #
+    # When hardware-bypass is enabled the ports must be configured as a segment.
+    # specify the port(s) on which upstream and downstream traffic will arrive.
+    # This information is necessary for the hardware to properly process flows.
+    #
+    # When using a tap configuration one of the ports will receive inbound traffic
+    # for the network and the other will receive outbound traffic. The two ports on a
+    # given segment must reside on the same network adapter.
+    #
+    # When using a SPAN-port configuration the upstream and downstream traffic
+    # arrives on a single port. This is configured by setting the two sides of the
+    # segment to reference the same port.  (e.g. 0-0 to configure a SPAN port on
+    # port 0).
+    #
+    # port segments are specified in the form:
+    #    ports: [0-1,2-3,4-5,6-6,7-7]
+    #
+    # For legacy systems when hardware-bypass is disabled this can be specified in any
+    # of the following ways:
+    #
+    #   a list of individual ports (e.g. ports: [0,1,2,3])
+    #
+    #   a range of ports (e.g. ports: [0-3])
+    #
+    #   "all" to indicate that all ports are to be merged together
+    #   (e.g. ports: [all])
+    #
+    # This parameter has no effect if auto-config is disabled.
+    #
+    ports: [0-1,2-3]
+
+    # When auto-config is enabled the hashmode specifies the algorithm for
+    # determining to which stream a given packet is to be delivered.
+    # This can be any valid Napatech NTPL hashmode command.
+    #
+    # The most common hashmode commands are:  hash2tuple, hash2tuplesorted,
+    # hash5tuple, hash5tuplesorted and roundrobin.
+    #
+    # See Napatech NTPL documentation other hashmodes and details on their use.
+    #
+    # This parameter has no effect if auto-config is disabled.
+    #
+    #
+    hashmode: hash5tuplesorted
+
+

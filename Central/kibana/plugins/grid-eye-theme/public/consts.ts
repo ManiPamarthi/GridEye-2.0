@@ -1,0 +1,1 @@
+export const CUSTOM_NAME = 'Grid Eye Central';

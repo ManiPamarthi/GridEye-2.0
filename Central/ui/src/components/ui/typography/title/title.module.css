@@ -1,0 +1,20 @@
+.title {
+    &.T1 {
+        font-size:3rem;
+    }
+    &.T2 {
+        font-size:25px;
+    }
+    &.T3 {
+        font-size:20px;
+    }
+    &.T4 {
+        font-size:18px;
+    }
+    &.T5 {
+        font-size:14px;
+    }
+    &.T6 {
+        font-size:12px;
+    }
+}

@@ -1,0 +1,45 @@
+.container {
+    width: 100%;
+}
+.kebab-menu {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.subHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.filtersBox {
+    display: flex;
+    gap:25px;
+}
+.searchField {
+    width: 360px;
+    > div {
+        padding: 17px 25px;
+        height: auto;
+        border-radius: 15px;
+    }
+    
+}
+.filtersBox{
+    padding: 17px 25px;
+    border:1px solid var(--color-border);
+    border-radius: 15px;
+}
+.tableWrapper {
+    padding-bottom: 10px;
+}
+.editModal {
+    width:600px;
+    height:auto;
+    border-radius: 15px;
+    padding:15px;
+    .header {
+        display: flex;
+        justify-content: space-between;
+    }
+}

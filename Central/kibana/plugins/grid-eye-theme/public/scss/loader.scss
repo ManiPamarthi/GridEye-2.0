@@ -1,0 +1,30 @@
+@import './helpers';
+
+// Change the spinner icon and text 
+.kbnLoaderWrap {
+    svg {
+        display: none !important;
+    }
+
+    &:before {
+        content: '';
+        display: flex;
+        background-position: center;
+        background-image: url('../assets/ge-icon.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        width: 100%;
+        height: 64px;
+    }
+
+    .kbnWelcomeText {
+        @include hideOldContent;
+
+        &:after {
+            @include showNewContent;
+            content: 'Welcome to Grid Eye';
+            line-height: 40px !important; 
+        }
+    }
+
+}

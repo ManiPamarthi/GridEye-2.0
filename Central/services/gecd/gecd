@@ -1,0 +1,115 @@
+#!/bin/python3
+import sys
+import os
+import os.path
+import json
+from  flask import Flask , request , jsonify, make_response
+from elasticsearch import Elasticsearch
+
+configProps = None
+dbHandle = None
+mainApp = Flask(__name__)
+
+version = "1.0"
+
+def printWelcomeMessage():
+    print("GridEye Central Daemon Service - version %s" % version)
+
+
+
+def loadDB():
+    global dbHandle
+    global configProps
+
+    try :
+        dbHandle = Elasticsearch(configProps["ElasticDBURI"], ca_certs=configProps["Certificate"])
+        return True
+    except Exception as ex :
+        print("Failed to connect with DB")
+        dbHandle = None
+
+        return False
+
+def loadConfigProps(configFile):
+    global configProps
+    if os.path.exists(configFile) :
+        configProps = json.loads(open(configFile).read())
+        print(configProps)
+
+def printUsage():
+    print("Insufficient arguments specified...")
+
+
+
+def initApplication():
+    if loadDB():
+        print("Connected to DB")
+    else :
+        print("Failed to initialize the application.. exiting")
+        sys.exit(-1)
+
+
+def startApplication():
+    global mainApp
+    mainApp.run(port=9000, host='0.0.0.0')
+
+
+
+@mainApp.route('/')
+def rootFolder():
+    return "Hello World from the Grid eye daemon service"
+
+#This is an API to be used to upload the topology JSON from an edge device
+#Inbound data will have two parameters
+# - EdgeServerIdentity (IP Address)
+# - TopologyJSON
+
+# The output will be either success or failure with a proper return code.
+@mainApp.route('/gecentral/api/upload/topology', methods=['POST'])
+def uploadTopologyInfo():
+    topoInfo = json.loads(request.data)
+    returnInfo = checkAndInsert(topoInfo)
+
+    return make_response(json.dumps(returnInfo))
+
+
+def checkAndInsert(topoInfo):
+    global dbHandle
+    ret = None
+    if topoInfo != None :
+        edgeInfo = topoInfo["edge_server"]
+        # Search and Insert or Update
+
+        try :
+            results = dbHandle.search(index=configProps["TopologyIndexName"], query={"match":{"edge_server":edgeInfo}})
+            recs = results['hits']['hits']
+            for r in recs :
+                resp = dbHandle.update(index=configProps["TopologyIndexName"],id=r['_id'], doc=topoInfo)
+            ret = {
+            "Status":"Success (Updated)"
+            }
+        except :
+            resp = dbHandle.index(index=configProps["TopologyIndexName"], document=topoInfo)
+            ret = {
+            "Status":"Success (Inseted)"
+            }
+
+    else :
+        ret = {
+        "Status":"Failure",
+        "Reason":"Invalid topology infomration sent. Unable to locate the end server info"
+       }
+
+    return ret
+
+
+if __name__ == "__main__":
+	printWelcomeMessage()
+
+	if len(sys.argv) < 2 :
+		printUsage()
+		sys.exit(0)
+
+	loadConfigProps(sys.argv[1])
+	initApplication()
+	startApplication()

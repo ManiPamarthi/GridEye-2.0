@@ -1,0 +1,26 @@
+#globalHeaderBars {
+
+    // Change the main logo
+    .euiHeaderLogo {
+        padding-bottom: 6px;
+
+        svg {
+            display: none !important;
+        }
+
+        &:after {
+            content: '';
+            background-position: center;
+            background-image: url('../assets/logo-gec.png');
+            background-repeat: no-repeat;
+            background-size: contain;
+            width: 150px;
+            height: 55px;
+        }
+
+        &:focus {
+            background-color: inherit;
+        }
+    }
+
+}

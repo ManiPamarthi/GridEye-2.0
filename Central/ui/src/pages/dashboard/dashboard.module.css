@@ -1,0 +1,153 @@
+.pageWrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 20px;
+    border-right: 1px solid var(--color-bg-color);
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    padding-top:30px;
+}
+.subContainer {
+    width: 790px;
+    height: 426px;
+    background: #FFFFFF;
+    box-shadow: 0px 20px 88px rgba(227, 230, 236, 0.9);
+    border-radius: 25px;
+}
+.subBoxStyle {
+    display: flex;
+}
+.subText {
+    padding-left: 20px;
+    font-size: 20px;
+    line-height: 50px;
+    color: var(--color-text-high);
+}
+.kebab-horizental-menu {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 75%;
+}
+.content {
+    margin-left: 20px;
+}
+.boxStyle {
+    width: 734px;
+    background: var(--color-bg-base);
+    border: 1px solid var(--color-bg-color);
+    border-radius: 15px;
+    margin: 10px;
+    height: 128px;
+}
+.id {
+    border-right: 1px solid var(--color-bg-color);
+    width: 140px;
+    float: left;
+    height: 128px;
+}
+.smallLabel {
+    padding-left: 10px;
+    line-height: 5;
+}
+.digiStyle {
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 38px;
+    color: var(--color-text-high);
+    padding-left: 20px;
+    margin-top: 0px;
+}
+.digiStyleText {
+    padding-left: 20px;
+    margin-top: 0px;
+}
+.currentChart {
+    width: 325px;
+    height: 198px;
+    float: left;
+    background: var(--color-bg-base);
+    border: 1px solid var(--color-bg-color);
+    border-radius: 15px;
+    margin: 10px;
+    margin-left: 30px;
+}
+.criticalHealth {
+    width: 385px;
+    height: 198px;
+    background: var(--color-bg-base);
+    border: 1px solid var(--color-bg-color);
+    border-radius: 15px;
+    margin: 10px;
+    float: left;
+}
+.alertWidget {
+    width: 354px;
+    height: 408px;
+}
+.searchBox {
+    margin-top: 15%;
+}
+.searchField {
+    width: 360px;
+    > div {
+        padding: 17px 25px;
+        height: auto;
+        width: 90%;
+        border: none;
+    }   
+}
+.leftBox {
+    width: 320px;
+    height: 1282px;
+    background: #FFFFFF;
+    box-shadow: 0px 20px 88px rgba(227, 230, 236, 0.9);
+    border-radius: 25px;
+}
+.subStyleBox {
+    display: flex;
+    gap: 60px;
+    border-bottom: 1px solid var(--color-bg-color);
+    margin: 12px;
+}
+.subTitleOne {
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--color-text-high);
+    line-height: 50px;
+    margin: 0px;
+}
+.cardIcon {
+    padding-left: 30%;
+    padding-top: 10px;
+}
+.leftBoxStyle {
+    margin: 10px;
+    padding: 12px;
+    border-bottom: 1px solid var(--color-bg-color);
+}
+.mr {
+    display: flex;
+}
+.rm {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color: #808191;
+}
+.topTableWidget {
+    width: 379px;
+    height: 408px;
+}
+.bandwidthWidget {
+    width: 354px;
+    height: 408px;
+}
+.protocolsWidget {
+    width: 379px;
+    height: 408px;
+}

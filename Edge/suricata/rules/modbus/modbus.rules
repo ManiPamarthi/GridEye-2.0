@@ -1,0 +1,75 @@
+# This signature indicates that a Modbus TCP packet was detected that does not have a value for the size field. This could indicate an attempt to corrupt data # integrity.Modbus TCP is a protocol often found in SCADA networks where it is used for process control. Modbus limits the size of the PDU to 253 bytes to 
+# allow the packet to be sent on a serial line. A Modbus TCP packet that does not have a value for the size field could indicate an attempt to corrupt data 
+# integrity
+alert tcp $MODBUS_CLIENT any -> $MODBUS_SERVER 502 (msg:"ETPRO SCADA Modbus TCP Illegal Packet Size, Possible DOS Attack"; flow:established; dsize:>300; reference:url,digitalbond.com/tools/quickdraw/modbus-tcp-rules; classtype:non-standard-protocol; sid:2801717; rev:2; metadata: created_at 2011_03_22, updated_at 2011_03_22;)
+
+# This signature indicates that the server or the slave is engaged in processing long-duration program commands. Normally the client or server would
+# retransmit the message after sometime.
+alert tcp $MODBUS_SERVER 502 -> $MODBUS_CLIENT any (msg:"ETPRO SCADA Modbus TCP Slave Device Busy Exception Code Delay"; flow:established; content:"|00 00|"; offset:2; depth:2; content:"|06|"; offset:8; depth:1; byte_test: 1, >=, 0x80, 7; threshold: type threshold, track by_src, count 3, seconds 60; reference:url,digitalbond.com/tools/quickdraw/modbus-tcp-rules; classtype:successful-dos; sid:2801719; rev:2; metadata: created_at 2011_03_22, updated_at 2011_03_22;)
+
+# This signature indicates that the server has accepted the request but a long-duration of time would be required to process the commands. 
+alert tcp $MODBUS_SERVER 502 -> $MODBUS_CLIENT any (msg:"ETPRO SCADA Modbus TCP Acknowledge Exception Code Delay"; flow:established; content:"|00 00|"; offset:2; depth:2; content:"|05|"; offset:8; depth:1; byte_test: 1, >=, 0x80, 7; threshold: type threshold, track by_src, count 3, seconds 60; reference:url,digitalbond.com/tools/quickdraw/modbus-tcp-rules; classtype:successful-dos; sid:2801720; rev:2; metadata:created_at 2011_03_22, updated_at 2011_03_22;)
+
+alert tcp $MODBUS_SERVER 502 -> $MODBUS_CLIENT any (msg:"ETPRO SCADA Modbus TCP Incorrect Packet Length, Possible DOS Attack"; flow:established; byte_jump:2,4; isdataat:0,relative; reference:url,digitalbond.com/tools/quickdraw/modbus-tcp-rules; classtype:non-standard-protocol; sid:2801721; rev:1; metadata: created_at 2011_03_22, updated_at 2011_03_22;)
+
+# This indicates an attempt to probe a Modbus TCP server to determine what type of device and function code support is available.
+# Modbus TCP is a request/response protocol commonly used in SCADA and DCS networks for process control. A function code is included in each request that  
+# determines the type of request such as read, write, or administrative. If the Modbus TCP server does not support the function code it will respond with an 
+# error function code and exception code 01. It would be an unusual error for an authorized HMI or server to issue a function code request that is not 
+# supported. Some vendors support vendor specific function codes so the result of a function code scan could be to allow an attacker to identify the field 
+# equipment vendor and model. This rule will trigger when 3 exception code 01 responses are received in 60 seconds. This is likely to happen if an attacker is 
+# attempting to see what type of device and function code support is available in the reconnaissance phase of an attack.
+alert tcp $MODBUS_SERVER 502 -> $MODBUS_CLIENT any (msg:"ETPRO SCADA Modbus TCP Function Code Scan"; flow:established; content:"|00 00|"; offset:2; depth:2; byte_test: 1, >=, 0x80, 7; content:"|01|"; offset:8; depth:1; threshold: type threshold, track by_src, count 3, seconds 60; reference:url,digitalbond.com/tools/quickdraw/modbus-tcp-rules; classtype:attempted-recon; sid:2801723; rev:2; metadata:created_at 2011_03_22, updated_at 2011_03_22;)
+
+# This indicates that the "Restart Communications" command was sent to a Modbus TCP device.
+# Modbus TCP is a protocol often found in SCADA networks where it is used for process control. The "Restart Communications" command will cause the device to 
+# restart and execute power up self tests. The device will be unavailable for a time and a malicious attacker can continuously send this command to cause a 
+# Denial of Service condition
+alert tcp $MODBUS_CLIENT any -> $MODBUS_SERVER 502 (msg:"ETPRO SCADA Modbus TCP Restart Communications Option"; flow:from_client,established; content:"|00 00|"; offset:2; depth:2; content:"|08 00 01|"; distance:7; within:3; reference:url,digitalbond.com/tools/quickdraw/modbus-tcp-rules; classtype:attempted-dos; sid:2801711; rev:3; metadata:created_at 2011_03_22, updated_at 2011_03_22;)
+
+# This indicates that a read or write request was sent to an address that is not configured in the Modbus TCP server.
+# Modbus TCP is a protocol commonly used in SCADA and DCS networks for process control. Read and write requests are issued to a Modbus TCP server to address 
+# points which can be individual bits (coils and discrete inputs) or bytes (registers). These points represent measurements or control of a physical 
+# process.If a read or write request is made to an address that is not configured in the Modbus TCP server the server will respond with an error function code # and exception code 02. It would be an unusual error for an authorized HMI or server to issue a read or write request to an address that is not configured.
+alert tcp $MODBUS_SERVER 502 -> $MODBUS_CLIENT any (msg:"ETPRO SCADA Modbus TCP Points List Scan"; flow:established; content:"|00 00|"; offset:2; depth:2; byte_test: 1, >=, 0x80, 7; content:"|02|"; offset:8; depth:1; threshold: type threshold, track by_src, count 5, seconds 60; reference:url,digitalbond.com/tools/quickdraw/modbus-tcp-rules; classtype:attempted-recon; sid:2801722; rev:2; metadata:created_at 2011_03_22, updated_at 2011_03_22;)
+
+# This indicates a possible Denial of Service attack against a Modbus TCP enabled device.
+# Modbus TCP is a protocol often found in SCADA networks where it is used for process control. When a device is sent a "Force Listen Only Mode" command it 
+# will go into an inactive state, so that it will not respond to commands or send any responses. In order to restore full functionality, the device will 
+# require a reboot or it must be sent a "Restart Communication" command.
+alert tcp $MODBUS_CLIENT any -> $MODBUS_SERVER 502 (msg:"ETPRO SCADA Modbus TCP Force Listen Only Mode"; flow:from_client,established; content:"|00 00|"; offset:2; depth:2; content:"|08 00 04|"; distance:7; within:3; reference:url,digitalbond.com/tools/quickdraw/modbus-tcp-rules; classtype:attempted-dos; sid:2801710; rev:3; metadata:created_at 2011_03_22, updated_at 2011_03_22;)
+
+# This indicates that an attacker attempted to erase the counters and diagnostic information in a device.
+# Modbus TCP is a protocol often found in SCADA networks where it is used for process control. An attacker can remove audit data from a Modbus server by 
+# issuing a "Diagnostics and Clear Counters and Diagnostic Registers" request. This would allow the attacker to hide his/her tracks.
+alert tcp $MODBUS_CLIENT any -> $MODBUS_SERVER 502 (msg:"ETPRO SCADA Modbus TCP Clear Counters and Diagnostic Registers"; flow:from_client,established; content:"|00 00|"; offset:2; depth:2; content:"|08 00 0A|"; distance:7; within:3; reference:url,digitalbond.com/tools/quickdraw/modbus-tcp-rules; classtype:misc-attack; sid:2801712; rev:3; metadata:created_at 2011_03_22, updated_at 2011_03_22;)
+
+# This indicates that an attacker attempted to read the device information for a PLC or other MODBUS server.
+# Modbus TCP is a protocol often found in SCADA networks where it is used for process control. A MODBUS "Read Device Identification" request will cause a 
+# MODBUS server to return the vendor name, product name, version number and other information about the device.
+alert tcp $MODBUS_CLIENT any -> $MODBUS_SERVER 502 (msg:"ETPRO SCADA Modbus TCP Read Device Identification"; flow:from_client,established; content:"|00 00|"; offset:2; depth:2; content:"|2b|"; distance:7; within:1; reference:url,digitalbond.com/tools/quickdraw/modbus-tcp-rules; classtype:attempted-recon; sid:2801713; rev:3; metadata:created_at 2011_03_22, updated_at 2011_03_22;)
+
+# This indicates that an attacker may have attempted to get information from a PLC or other Modbus server by issuing the "Report Slave ID" request.
+# Modbus TCP is a protocol often found in SCADA networks where it is used for process control. A "Report Slave" request will reveal device specific 
+# information that could be used to mount further attacks.
+alert tcp $MODBUS_CLIENT any -> $MODBUS_SERVER 502 (msg:"ETPRO SCADA Modbus TCP Report Server Information"; flow:from_client,established; content:"|00 00|"; offset:2; depth:2; content:"|11|"; distance:7; within:1; reference:url,digitalbond.com/tools/quickdraw/modbus-tcp-rules; classtype:attempted-recon; sid:2801714; rev:3; metadata:created_at 2011_03_22, updated_at 2011_03_22;)
+
+# This indicates detection of the Modbus Write Multiple Coils command. The normal range of output quantity is from 0x0001 to 0x07B0.
+# MODBUS is an application-layer messaging protocol, positioned at level 7 of the OSI model. It provides client/server communication between devices connected 
+# on different types of buses or networks. 
+alert tcp $MODBUS_CLIENT any -> $MODBUS_SERVER 502 ( msg:"PROTOCOL-SCADA Modbus write multiple coils - too many outputs"; flow:to_server,established; byte_test:2,>,1968,10; metadata:policy max-detect-ips drop; reference:url,www.modbus.org/docs/Modbus_Application_Protocol_V1_1b.pdf; classtype:protocol-command-decode; sid:15076; rev:7; )
+
+# This indicates detection of the Modbus Read Coils command.
+# MODBUS is an application-layer messaging protocol, positioned at level 7 of the OSI model. It provides client/server communication between devices connected 
+# on different types of buses or networks. 
+alert tcp $MODBUS_CLIENT any -> $MODBUS_SERVER 502 ( msg:"PROTOCOL-SCADA Modbus read multiple coils - too many inputs"; flow:to_server,established; byte_test:2,>,2000,10; metadata:policy max-detect-ips drop; reference:url,www.modbus.org/docs/Modbus_Application_Protocol_V1_1b.pdf; classtype:protocol-command-decode; sid:15077; rev:7; )
+
+# This indicates detection of the Modbus Read Holding Registers command.
+# MODBUS is an application-layer messaging protocol, positioned at level 7 of the OSI model. It provides client/server communication between devices connected 
+# on different types of buses or networks. 
+alert tcp $MODBUS_CLIENT any -> $MODBUS_SERVER 502 ( msg:"PROTOCOL-SCADA Modbus read holding registers - too many inputs"; flow:to_server,established;byte_test:2,>,125,10; metadata:policy max-detect-ips drop; reference:url,www.modbus.org/docs/Modbus_Application_Protocol_V1_1b.pdf; classtype:protocol-command-decode; sid:29194; rev:3; )
+
+# The unit ID is used when dealing with Modbus Bridges. Typical bridges convert Modbus TCP to Modbus serial or Modbus plus. The Unit ID is either the device 
+# Id of serial device or it is index number that references a Modbus plus layered address.
+
+# If you are talking to a Modicon controller you will not need the unit ID, most software appends an id of 0 to the OP address. If you are using a Moxa Modbus # TCP to Modbus Serial converter you will need to use the IP address of the converter and the unit (device) id of the hardware you are requesting data from on # the other side. And 255 is not a valid Device ID for most Modbus serial protocol devices.

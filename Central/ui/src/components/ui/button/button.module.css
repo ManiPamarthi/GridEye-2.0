@@ -1,0 +1,25 @@
+.button {
+    padding: 10px;
+    border:0;
+    border-radius: 7px;
+    &.PRIMARY {
+        background: var(--color-primary);
+        color:#fff;
+        &:disabled {
+            opacity: 0.8;
+        }
+    }
+    &.SECONDARY {
+        background: var(--color-secondary);
+        color:#fff;
+        &:disabled {
+            opacity: 0.8;
+        }
+    }
+    &.TERTIARY {
+        background: unset;
+        &:disabled {
+            opacity: 0.8;
+        }
+    }
+}

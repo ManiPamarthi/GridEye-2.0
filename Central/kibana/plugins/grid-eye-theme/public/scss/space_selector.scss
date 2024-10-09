@@ -1,0 +1,30 @@
+.ckl-app-space_selector {
+
+    // Modify the space seletor logo upon login
+    .spcSpaceSelector__logo,
+    /// Since 8.3 https://github.com/elastic/kibana/pull/131579
+    .kbnSolutionAvatar {
+        svg {
+            display: none !important;
+        }
+
+        &:before {
+            content: '';
+            display: flex;
+            background-position: center;
+            background-image: url('../assets/ge-icon.png');
+            background-repeat: no-repeat;
+            background-size: contain;
+            width: 100%;
+            height: 48px;
+        }
+    }
+
+    // Remove background design 
+    .spcSpaceSelector {
+        &:before, &:after {
+            content: '';
+        }
+    }
+
+}

@@ -1,0 +1,19 @@
+.B6 {
+     font-size: 11px;
+}
+.B5 {
+    font-size: calc(11px+5%);
+}
+.B4 {
+    font-size: calc(11px+10%);
+}
+.B3 {
+    font-size: calc(11px+15%);
+
+}
+.B2 {
+    font-size: calc(11px+20%);
+}
+.B1 {
+    font-size: calc(11px+25%);
+}

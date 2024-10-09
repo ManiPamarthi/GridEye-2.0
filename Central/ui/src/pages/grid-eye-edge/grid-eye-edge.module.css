@@ -1,0 +1,102 @@
+.Container {
+   width: 100%;
+    .rowCard {
+        width: 100%;
+        height: 64px;
+        background: var( --color-bg-base);
+        box-shadow: 0px 20px 88px rgba(227, 230, 236, 0.9);
+        border-radius: 15px;
+        margin-top: 20px;
+    }
+    .rowCardOne {
+        width: 100%;
+        height: 188px;
+        background: var( --color-bg-base);
+        box-shadow: 0px 20px 88px rgba(227, 230, 236, 0.9);
+        border-radius: 15px;
+        margin-top: 20px;
+    }
+    .edgeStyle {
+        padding-top: 7px;
+    }
+    .smallTitle {
+        font-size: 14px;
+        float: left;
+        padding-left: 31px;
+        font-weight: 400;
+        margin-top: 9px;
+    }
+    .idLink {
+        font-size: 12px;
+        color: var(--color-primary);
+        padding-left: 10%;
+    }
+    .smallText {
+        font-size: 12px;
+        line-height: 18px;
+        color: var( --color-text-high);
+        opacity: 0.4;
+        padding-left: 37%;
+    }
+    .smallTextOne {
+        font-size: 12px;
+        line-height: 18px;
+        color: var( --color-text-high);
+        opacity: 0.4;
+        padding-left: 10%;
+    }
+    .caretIonStyle {
+        padding-left: 5%;
+    }
+    .caretIonStyleOne {
+        padding-left: 49.2%;
+    }
+    .timeText {
+        font-size: 12px;
+        line-height: 18px;
+        color: var( --color-text-high);
+        opacity: 0.4;
+        padding-left: 12%;
+    }
+    .smallLabel {
+        padding-left: 20px;
+    }
+   .digiStyle {
+        line-height: 38px;
+        color: var(--color-text-high);
+        margin-top: 0px;
+        margin-left: 20px;
+    }
+    .deleteIcon {
+        padding-left: 20px;
+    }
+    .boxStyleOne {
+        width: 196px;
+        height: 108px;
+        background: var(--color-bg-base);
+        border: 1px solid var(--color-bg-color);
+        border-radius: 15px;
+        float: left;
+        margin: 10px;
+    }
+    .boxStyleTwo {
+        width: 323px;
+        background: var(--color-bg-base);
+        border: 1px solid var(--color-bg-color);
+        border-radius: 15px;
+        float: left;
+        margin: 10px;
+        margin-left: 30%;
+        height: 108px;
+    }
+    .boxStyleThree {
+        width: 122px;
+        background-color: var( --color-red-shadow);
+        border: 1px solid var(--color-dark-red);
+        border-radius: 15px;
+        float: left;
+        margin: 10px;
+        height: 108px;
+        margin-left: 15px;
+    }
+}

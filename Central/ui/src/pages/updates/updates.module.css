@@ -1,0 +1,108 @@
+.container{
+    width: 100%;
+        .subTitle {
+            font-weight: 600;
+            line-height: 50px;
+            margin: 18px;
+            border-bottom: 1px solid var(--color-bg-color);
+        }
+        .leftBox {
+            width: 901px;
+            height: 481px;
+            background: var(--color-bg-base);
+            box-shadow: 0px 20px 88px var(--color-shadow);
+            border-radius: 25px;
+        }
+        .rightBox {
+            width: 379px;
+            height: 408px;
+            background: var(--color-bg-base);
+            box-shadow: 0px 20px 88px var(--color-shadow);
+            border-radius: 25px;
+        }
+        .badgeBoxSuccess {
+            height: 12px;
+            background: var(--color-success);
+            border-radius: 4px;
+            margin-top: 3%;
+            font-size: 10px;
+            color: var(--color-bg-base);
+        }
+        .badgeBoxWarning {
+            height: 12px;
+            background: var(--color-warning);
+            border-radius: 4px;
+            margin-top: 3%;
+            font-size: 10px;
+            color: var(--color-bg-base);
+            margin-left: 5px;
+        }
+        .badgeBoxDanger {
+            height: 12px;
+            background: var(--color-english-vermillion);
+            border-radius: 4px;
+            margin-top: 3%;
+            font-size: 10px;
+            color: var(--color-bg-base);
+            margin-left: 6px;
+        }
+        .idLink {
+            width: 80px;
+            font-size: 12px;
+            text-align: center;
+            color: var(--color-violet);
+            opacity: 0.7;
+            padding-left: 60%;
+            padding-top: 3%;
+        }
+        .idLinkDanger {
+            width: 80px;
+            font-size: 12px;
+            text-align: center;
+            color: var(--color-violet);
+            opacity: 0.7;
+            padding-left: 63%;
+            padding-top: 3%;
+        }
+        .idLinkWarning {
+            width: 80px;
+            font-size: 12px;
+            text-align: center;
+            color: var(--color-violet);
+            opacity: 0.7;
+            padding-left: 61%;
+            padding-top: 3%;
+        }
+        .checkBoxStyle {
+            padding-left: 20px;
+            gap: 10px;
+        }
+        .leftBoxRow {
+            display: flex;
+            border-bottom: 1px solid var(--color-bg-color);
+            height: 60px;
+            margin: 18px;
+        }
+        .rightBoxCard {
+            width: 216px;
+            height: 216px;
+            margin: 20%;
+            border-radius: 50%;
+            background: var(--color-dark-base);
+        }
+        .titleText {
+            font-size: 14px;
+            color: var(--color-text-high);
+            padding-left: 30%;
+            margin: 10%;
+        }
+        .uploadIconStyle {
+            margin: 30%;
+            padding-top: 25%;
+        }
+        .ContainerBox {
+            display: flex;
+            gap: 20px;
+            justify-content: space-around;
+        }
+}

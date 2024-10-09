@@ -1,0 +1,14 @@
+version: '3.9'
+# NOTE - this docker-compose is used to replicate the production environment by using
+#      the Dockerfile to build the image and then running the image as a container.
+services:
+  grideye:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: grideye:${GRIDEYE_VERSION:-latest}
+    restart: always
+    env_file:
+    - .env
+    environment:
+      GRIDEYE_HOST: 0.0.0.0

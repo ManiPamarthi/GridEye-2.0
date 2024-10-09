@@ -1,0 +1,32 @@
+
+#count icmp packets without generating alerts
+alert icmp 10.0.1.1 any -> 10.0.1.2 any (msg:"count icmp pkts"; \
+	flowint: icmppkt, +, 1; noalert; sid:1;)
+
+#alert only when icmp packet count > 10 and it will generate alert for each
+#packet after that
+
+alert icmp 10.0.1.1 any -> 10.0.1.2 any (msg:"alert if greater than 10"; \
+        flowint: icmppkt, >, 10; sid:2;gid:1;)
+
+#alert "if icmp count more than 2" logic hits twice (count 2) within 5 sec, 
+#it will wait till 10 sec and again generate alert after next 10 sec onwards
+#alert icmp 10.0.1.1 any -> 10.0.1.2 any (msg:"thresh alert if greater than 10"; \
+#flowint: icmppkt, >, 2; threshold: type threshold, track by_src, count 2, seconds 5; sid:3;)
+
+#alert if icmp count more than 2 hits twice (count 2) within 5 sec, 
+#it will wait till 5 sec and generate alert for all packets matched after that
+#alert icmp 10.0.1.1 any -> 10.0.1.2 any (msg:"detect alert if greater than 10"; \
+#flowint: icmppkt, >, 2; detection_filter: track by_src, count 2, seconds 5; sid:5;)
+
+#alert if icmp packet count > 10 , i.e (10+1) = 11th packet and then reset the counter, 
+#it will again generate alert after ((11+10)+1) = 22nd packet
+#alert icmp 10.0.1.1 any -> 10.0.1.2 any (msg:"flow alert if greater than 50"; \
+#        flowint: icmppkt, >, 10; flowint:icmppkt, =, 0; sid:6;)
+
+#Set a variable if not set and then check if set then just increament the counter
+#alert tcp any any -> any any (msg:"init count packet variable"; \
+#        flowint:cntpackets,notset; flowint:cntpackets, =, 0; noalert; sid:7;)
+
+#alert tcp any any -> any any (msg:"count the rest without generating alerts"; \
+#        flowint:cntpackets,isset; flowint:cntpackets, +, 1; noalert; sid:8;)

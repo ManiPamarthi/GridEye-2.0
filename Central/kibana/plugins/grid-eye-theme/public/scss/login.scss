@@ -1,0 +1,58 @@
+@import './helpers';
+
+.ckl-app-security_login {
+    .loginWelcome {
+        // Remove the current background design 
+        &::before, &::after {
+            content: '';
+        }
+
+        // Set the new background image
+        background-image: url('../assets/login-background.png');
+        background-size: cover;
+        
+        // Change the login form icon, text and spacings
+        .loginWelcome__header {
+            padding-top: 100px;
+
+            .loginWelcome__logo {
+                display: none !important;
+            }
+        
+            .loginWelcome__title {
+                @include hideOldContent;
+
+                &:after {
+                    content: '';
+                    display: flex;
+                    background-position: center;
+                    background-image: url('../assets/logo-gec.png');
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    height: 80px;
+                }
+
+                + .euiSpacer {
+                    display: none;
+                }
+            }
+        
+        }
+        
+        // Change the error message styles
+        .loginWelcome__content {
+            .euiCallOut {
+                background-color: lightblue;
+            }
+        
+            .euiCallOut .euiCallOutHeader__title {
+                @include hideOldContent;
+                &:after {
+                    @include showNewContent;
+                    color: darkblue !important; 
+                    content: "You have logged out of Grid Eye Central."        
+                }
+            }
+        }
+    }
+}

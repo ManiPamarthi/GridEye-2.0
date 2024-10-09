@@ -1,0 +1,103 @@
+[tool.poetry]
+name = "grideye"
+version = "0.1.0"
+description = ""
+authors = [
+    "Devin Miller <devin@utiltyx.com>"
+]
+maintainers = [
+
+]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "0.95.2"
+uvicorn = {version = "0.22.0", extras = ["standard"]}
+pydantic = {version = "^1.10.4", extras = ["dotenv"]}
+yarl = "^1.8.2"
+ujson = "^5.7.0"
+httptools = "^0.5.0"
+aiokafka = "^0.8.0"
+msgspec = "0.15.1"
+elasticsearch = {extras = ["async"], version = "^8.7.0"}
+requests = "^2.28.2"
+python-multipart = "^0.0.6"
+types-requests = "^2.29.0.0"
+flake8-rst = "^0.8.0"
+pylint = "^2.17.3"
+flake8-rst-docstrings = "<=0.3"
+pydevd-pycharm = "^232.5150.120"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.2.1"
+mypy = "^1.1.1"
+isort = "^5.11.4"
+pre-commit = "^3.0.1"
+black = "^22.12.0"
+autoflake = "^1.6.1"
+pytest-cov = "^4.0.0"
+anyio = "^3.6.2"
+pytest-env = "^0.8.1"
+httpx = "^0.23.3"
+
+[tool.poetry.group.dev.dependencies]
+ipdb = "0.13.13"
+wemake-python-styleguide = "^0.17.0"
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+src_paths = ["grideye",]
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
+allow_subclassing_any = true
+allow_untyped_calls = true
+pretty = true
+show_error_codes = true
+implicit_reexport = true
+allow_untyped_decorators = true
+warn_unused_ignores = false
+warn_return_any = false
+namespace_packages = true
+
+[tool.pylint.main]
+extension-pkg-allow-list = ["pydantic"]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "error",
+    "ignore::DeprecationWarning",
+    "ignore:.*unclosed.*:ResourceWarning",
+]
+env = [
+    "GRIDEYE_ENVIRONMENT=pytest",
+    "GRIDEYE_DB_FILE=test_db.sqlite3",
+]
+
+[fastapi-template.options]
+project_name = "grideye"
+api_type = "rest"
+enable_redis = "None"
+enable_rmq = "None"
+ci_type = "none"
+enable_migrations = "None"
+enable_taskiq = "None"
+enable_kube = "None"
+kube_name = "grideye"
+enable_routers = "True"
+enable_kafka = "True"
+enable_loguru = "None"
+traefik_labels = "None"
+add_dummy = "True"
+orm = "ormar"
+self_hosted_swagger = "None"
+prometheus_enabled = "None"
+sentry_enabled = "None"
+otlp_enabled = "None"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

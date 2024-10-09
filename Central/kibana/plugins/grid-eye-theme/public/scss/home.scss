@@ -1,0 +1,16 @@
+#globalHeaderBars {
+
+    /*
+    * Hide the unwanted content
+    *
+    * First Header - Search Bar and Help Menu
+    * Second Header - Complete Bar
+    */
+    .header__firstBar .euiSelectable.euiSelectableTemplateSitewide.kbnSearchBar,
+    .header__firstBar #headerHelpMenu,
+    .header__firstBar .euiHeaderSectionItemButton[data-test-subj=newsfeed],
+    .header__secondBar .euiHeaderSection--left {
+        display: none !important;
+    }
+
+}

@@ -1,0 +1,12 @@
+.viewContainer {
+    padding: 14px;
+    box-sizing: border-box;
+    height: 100%;
+    transition: width 500ms;
+    flex:3;
+    overflow: auto;
+}
+.viewContainerInner {
+    display: flex;
+    height: 100%;
+}

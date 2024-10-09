@@ -1,0 +1,27 @@
+.widgetContainer {
+    background: #fff;
+    margin-top:10px;
+    padding:20px;
+    max-width: 470px;
+    min-height: 408px;
+    background: #FFFFFF;
+    box-shadow: 0px 20px 88px rgba(227, 230, 236, 0.9);
+    border-radius: 25px;
+    .header {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #EFEFEF;
+    }
+    .title {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 30px;
+        margin: 0;
+        margin-bottom: 10px;
+    }
+    .container {
+        width: 100%;
+        height: 100%;
+    }
+}

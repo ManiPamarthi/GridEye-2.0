@@ -1,0 +1,18 @@
+%YAML 1.1
+---
+
+default-rule-path: /var/lib/suricata/rules
+
+rule-files:
+  #- suricata.rules
+   - modbus.rules
+
+##
+## Auxiliary configuration files.
+##
+
+classification-file: /etc/suricata/classification.config
+reference-config-file: /etc/suricata/reference.config
+# threshold-file: /etc/suricata/threshold.config
+
+

@@ -1,0 +1,17 @@
+version: '3.9'
+# NOTE - this docker-compose.dev is used more for development purposes. It enables
+#   autoreload and mounts the current directory as a volume. A python debugger port
+#   can be enabled if required.
+services:
+  grideye:
+    ports:
+      # Exposes application port.
+    - "8000:8000"
+    # Python debugger port.
+#    - "64422:64422"
+    volumes:
+      # Adds current directory as volume.
+    - .:/app/src/
+    environment:
+      # Enables autoreload.
+      GRIDEYE_RELOAD: "True"

@@ -1,0 +1,93 @@
+%YAML 1.1
+---
+
+# Run Suricata with a specific user-id and group-id:
+#run-as:
+#  user: suri
+#  group: suri
+
+# Some logging modules will use that name in event as identifier. The default
+# value is the hostname
+#sensor-name: suricata
+
+# Default location of the pid file. The pid file is only used in
+# daemon mode (start Suricata with -D). If not running in daemon mode
+# the --pidfile command line option must be used to create a pid file.
+#pid-file: /var/run/suricata.pid
+
+# Daemon working directory
+# Suricata will change directory to this one if provided
+# Default: "/"
+#daemon-directory: "/"
+
+# Umask.
+# Suricata will use this umask if it is provided. By default it will use the
+# umask passed on by the shell.
+#umask: 022
+
+# Suricata core dump configuration. Limits the size of the core dump file to
+# approximately max-dump. The actual core dump size will be a multiple of the
+# page size. Core dumps that would be larger than max-dump are truncated. On
+# Linux, the actual core dump size may be a few pages larger than max-dump.
+# Setting max-dump to 0 disables core dumping.
+# Setting max-dump to 'unlimited' will give the full core dump file.
+# On 32-bit Linux, a max-dump value >= ULONG_MAX may cause the core dump size
+                                                                                  
+# to be 'unlimited'.
+
+coredump:
+  max-dump: unlimited
+
+# If the Suricata box is a router for the sniffed networks, set it to 'router'. If
+# it is a pure sniffing setup, set it to 'sniffer-only'.
+# If set to auto, the variable is internally switched to 'router' in IPS mode
+# and 'sniffer-only' in IDS mode.
+# This feature is currently only used by the reject* keywords.
+host-mode: auto
+
+# Number of packets preallocated per thread. The default is 1024. A higher number
+# will make sure each CPU will be more easily kept busy, but may negatively
+# impact caching.
+max-pending-packets: 20000
+  #max-pending-packets: 1024
+
+# Runmode the engine should use. Please check --list-runmodes to get the available
+# runmodes for each packet acquisition method. Default depends on selected capture
+# method. 'workers' generally gives best performance.
+#runmode: autofp
+
+# Specifies the kind of flow load balancer used by the flow pinned autofp mode.
+#
+# Supported schedulers are:
+#
+# hash     - Flow assigned to threads using the 5-7 tuple hash.
+# ippair   - Flow assigned to threads using addresses only.
+#
+#autofp-scheduler: hash
+# Preallocated size for each packet. Default is 1514 which is the classical
+# size for pcap on Ethernet. You should adjust this value to the highest
+# packet size (MTU + hardware header) on your system.
+#default-packet-size: 1514
+
+# Unix command socket that can be used to pass commands to Suricata.
+# An external tool can then connect to get information from Suricata
+# or trigger some modifications of the engine. Set enabled to yes
+# to activate the feature. In auto mode, the feature will only be
+# activated in live capture mode. You can use the filename variable to set
+# the file name of the socket.
+unix-command:
+  enabled: auto
+  #filename: custom.socket
+
+# Magic file. The extension .mgc is added to the value here.
+#magic-file: /usr/share/file/magic
+#magic-file:
+
+# GeoIP2 database file. Specify path and filename of GeoIP2 database
+# if using rules with "geoip" rule option.
+#geoip-database: /usr/local/share/GeoLite2/GeoLite2-Country.mmdb
+
+legacy:
+  uricontent: enabled
+
+

@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+    width: max-content;
+    flex-direction: column;
+    gap:5px;
+    .label {
+        color:var(--color-text-low);
+    }
+    select {
+        background: url("data:image/svg+xml,<svg width='13px' height='8px' viewBox='0 0 13 8' fill='none' xmlns='http://www.w3.org/2000/svg'>
+        <path d='M1.375 1.5L6.375 6.5L11.375 1.5' stroke='#979797' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/>
+        </svg>") no-repeat;
+        background-position: calc(100% - 0.75rem) center !important;
+        -moz-appearance:none !important;
+        -webkit-appearance: none !important; 
+        appearance: none !important;
+        padding-right: 2rem !important;
+        border:1px solid var(--color-border);
+        padding: 5px;
+        border-radius: 7px;
+    }
+}

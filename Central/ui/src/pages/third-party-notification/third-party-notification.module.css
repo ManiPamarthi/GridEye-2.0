@@ -1,0 +1,18 @@
+.container {
+    width: 97%;
+    tbody {
+        td {
+            color: #656B70;
+        }
+    }
+    .subTitle {
+        font-weight: 600;
+        font-size: 20px;
+    }
+    .kebab-menu {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

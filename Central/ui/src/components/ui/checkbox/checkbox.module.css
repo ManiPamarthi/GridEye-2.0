@@ -1,0 +1,10 @@
+.checkbox {
+    display: flex;
+    align-items: center;
+    input[type='checkbox'] {
+        width: 20px;
+        height: 20px;
+        font-size:5px;
+        accent-color: var( --color-primary);
+    }
+}

@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    gap:10px;
+    background: url('../../../../assets/login-loader-bg.png') no-repeat;
+    background-position: bottom;
+    background-size: 100%;
+    position: absolute;
+    bottom:0;
+    left:0;
+    background-color: #fff;
+    pointer-events: none;
+}
+.loaderText {
+color:#29A8AF;
+font-size: 20px;
+font-weight: 400;
+}

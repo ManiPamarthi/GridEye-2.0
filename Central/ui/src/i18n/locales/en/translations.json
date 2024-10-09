@@ -1,0 +1,10 @@
+{
+    "dashboard": "Dashboard",
+    "alert-manager": "Alert Manager",
+    "asset-manager": "Asset Manager",
+    "network": "Network",
+    "vulnerability-manager": "Vulnerability Manager",
+    "attack-surface-monitoring": "Attack Surface Monitoring",
+    "compliance-reports": "Compliance Reports",
+    "settings": "Settings"
+}
